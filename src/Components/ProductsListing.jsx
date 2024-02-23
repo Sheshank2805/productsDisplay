@@ -311,7 +311,7 @@ function ProductsListing({ cartItems, setCartItems, filteredProducts, handleSear
           <button
             onClick={() => selectPageHandler(page + 1)}
             disabled={page >= (products.length || filteredProducts.length) / 10}
-            className={`bg-blue-500 text-white px-4 py-2 rounded-r-md hover:bg-blue-600 focus:outline-none ${
+            className={`bg-blue-500 text-white px-3 py-1 rounded-r-md text-sm md:px-4 md:py-2 md:text-base hover:bg-blue-600 focus:outline-none ${
               page >= (products.length || filteredProducts.length) / 10 ? 'opacity-50 cursor-not-allowed' : ''
             }`}
           >
