@@ -6,8 +6,7 @@ import Cart from './Components/Cart';
 import axios from 'axios';
 import Registration from './Components/Registration';
 import LoginScreen from './Components/LoginScreen';
-import WelcomePage from './Components/WelcomePage';
-import NoProductsFound from './Components/NoProducts';
+
 
 function App() {
   
@@ -31,7 +30,8 @@ function App() {
   }, []);
 
   const handleSearch = (query) => {
-    if (!query.trim()) {
+    console.log('Search query:', query);
+    if (!query) {
       setFilteredProducts(products);
       return;
     }
@@ -41,6 +41,7 @@ function App() {
         product.title.toLowerCase().includes(query.toLowerCase()) ||
         product.description.toLowerCase().includes(query.toLowerCase())
     );
+    console.log('Filtered products:', filtered); 
     setFilteredProducts(filtered);
   };
 
@@ -48,19 +49,19 @@ function App() {
     <>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<WelcomePage />} />
+        <Route
+          path="/"
+          element={<ProductsListing cartItems={cartItems} setCartItems={setCartItems} filteredProducts={filteredProducts} handleSearch={handleSearch}/>}
+        />
         <Route path='/register' element={<Registration/>}/>
         <Route path="/login" element={<LoginScreen/>} />
         <Route
           path="/cart"
           element={<Cart cartItems={cartItems} handleSearch={handleSearch} />}
         />
-        <Route
-          path="/home"
-          element={<ProductsListing cartItems={cartItems} setCartItems={setCartItems} filteredProducts={filteredProducts} handleSearch={handleSearch}/>}
-        />
+        
         <Route path="/product/:id" element={<ProductDetails/>} />
-        <Route path="/no-products-found" element={<NoProductsFound />} />
+       
       </Routes>
       </BrowserRouter>
     </>

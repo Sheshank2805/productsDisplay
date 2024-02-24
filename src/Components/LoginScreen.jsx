@@ -42,7 +42,7 @@ function Login() {
 
       if (response.ok) {
         alert('Login successful!');
-        navigate('/home');
+        navigate('/');
       } else {
         alert('Invalid Username or password');
         navigate("/register");

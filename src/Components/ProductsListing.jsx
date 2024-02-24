@@ -4,33 +4,31 @@ import NavigationBar from "./NavigationBar"
 import axios from 'axios';
 
 function ProductsListing({ cartItems, setCartItems, filteredProducts, handleSearch }) {
-  const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
+  const [products, setProducts] = useState([]);
   const [sortOption, setSortOption] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  useEffect(() => {
     setPage(1);
   }, [filteredProducts]);
+  useEffect(()=>{
+   fetchProducts()
+  },[])
 
   const fetchProducts = async () => {
-    const response = await axios.get(`https://dummyjson.com/products?limit=100`);
-    const data = response.data;
+    try {
+      const response = await axios.get(`https://dummyjson.com/products?limit=100`);
+      const data = response.data;
 
-    if (data && data.products) {
-      setProducts(data.products);
+      if (data && data.products) {
+        setProducts(data.products);
+      }
+    } catch (error) {
+      console.error('Error fetching products:', error);
     }
   };
 
-  useEffect(() => {
-    if (filteredProducts.length === 0) {
-      navigate('/no-products-found');
-    }
-  }, [filteredProducts, navigate]);
 
   const selectPageHandler = (selectedPage) => {
     if (selectedPage >= 1 && selectedPage <= (filteredProducts.length || products.length) / 10 && selectedPage !== page) {
@@ -60,14 +58,15 @@ function ProductsListing({ cartItems, setCartItems, filteredProducts, handleSear
       default:
         break;
     }
-    console.log("Sorted Products: ", sortedProducts); // Log sorted products
+    console.log("Sorted Products: ", sortedProducts); 
     return sortedProducts;
   };
 
   useEffect(() => {
     if (sortOption) {
-      console.log("Sorting option selected: ", sortOption); // Log sorting option
-      setProducts(sortProducts(sortOption));
+      console.log("Sorting option selected: ", sortOption); 
+      const sortedProducts = sortProducts(sortOption);
+      setProducts(sortedProducts); 
     }
   }, [sortOption, filteredProducts]);
 
@@ -90,7 +89,7 @@ function ProductsListing({ cartItems, setCartItems, filteredProducts, handleSear
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4">
-          {(products.length > 0 ? products : filteredProducts).slice(page * 10 - 10, page * 10).map((prod) => {
+          {products.slice(page * 10 - 10, page * 10).map((prod) => { // Render products instead of filteredProducts
             return (
               <div key={prod.id} className="bg-white p-4 shadow-md rounded-lg">
                 <Link to={`/product/${prod.id}`}>
@@ -133,7 +132,7 @@ function ProductsListing({ cartItems, setCartItems, filteredProducts, handleSear
           >
             ◀ Prev
           </button>
-          {[...Array(Math.ceil((products.length || filteredProducts.length) / 10))].map((_, i) => {
+          {[...Array(Math.ceil(products.length / 10))].map((_, i) => { // Use products instead of filteredProducts
             return (
               <button
                 key={i}
@@ -146,9 +145,9 @@ function ProductsListing({ cartItems, setCartItems, filteredProducts, handleSear
           })}
           <button
             onClick={() => selectPageHandler(page + 1)}
-            disabled={page >= (products.length || filteredProducts.length) / 10}
+            disabled={page >= products.length / 10}
             className={`bg-blue-500 text-white px-3 py-1 rounded-r-md text-sm md:px-4 md:py-2 md:text-base hover:bg-blue-600 focus:outline-none ${
-              page >= (products.length || filteredProducts.length) / 10 ? 'opacity-50 cursor-not-allowed' : ''
+              page >= products.length / 10 ? 'opacity-50 cursor-not-allowed' : ''
             }`}
           >
             Next ▶
@@ -160,3 +159,5 @@ function ProductsListing({ cartItems, setCartItems, filteredProducts, handleSear
 }
 
 export default ProductsListing;
+
+
