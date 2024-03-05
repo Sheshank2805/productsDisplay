@@ -16,9 +16,9 @@ const NavigationBar = ({ onSearch }) => {
     setSearchQuery('');
   };
 
-  const handleLogout = () => {
-    navigate('/');
-  };
+  // const handleLogout = () => {
+  //   navigate('/');
+  // };
 
   return (
     <nav className="bg-gray-800 p-4">
@@ -75,3 +75,4 @@ const NavigationBar = ({ onSearch }) => {
 };
 
 export default NavigationBar;
+
